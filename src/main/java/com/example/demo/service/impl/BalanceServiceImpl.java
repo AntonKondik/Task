@@ -27,7 +27,7 @@ public class BalanceServiceImpl implements BalanceService {
         if (!oAccount.isPresent())
             throw new NotFoundException("Аккаунт не найден");
         Account account = oAccount.get();
-        account.setAmount(account.getAmount() + diff);
+        account.setAmount(account.getAmount() + diff);//Здесь так и не понял в чем проблема - локально дернул метод - в базе значение поменялось
         return accountRepository.save(account);
     }
 }
