@@ -15,6 +15,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Slf4j
 @RestController
+@RequestMapping(value = "/accounts")
 @RequiredArgsConstructor
 public class AccountResource {
 
@@ -22,7 +23,7 @@ public class AccountResource {
     private final BalanceService balanceService;
     private final ContextHolder contextHolder;
 
-    @RequestMapping(method = POST, value = "/accounts/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = POST, value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> add(Account account, @RequestHeader String userInfo) {
 
         contextHolder.setUserInfo(userInfo);
@@ -35,7 +36,7 @@ public class AccountResource {
         }
     }
 
-    @RequestMapping(method = GET, value = "/accounts/get/{accountNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = GET, value = "/get/{accountNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> findByAccountNumber(@PathVariable("accountNumber") String accountNumber,
                                                        @RequestHeader String userInfo) {
 
@@ -53,7 +54,7 @@ public class AccountResource {
         }
     }
 
-    @RequestMapping(method = PUT, value = "/accounts/change", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = PUT, value = "/change", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> changeBalance(@RequestParam("id") Long id, @RequestParam("diff") Double diff,
                                                  @RequestHeader String userInfo) {
 
