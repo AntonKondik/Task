@@ -24,7 +24,7 @@ public class AccountResource {
     private final ContextHolder contextHolder;
 
     @RequestMapping(method = POST, value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Account> add(Account account, @RequestHeader String userInfo) {
+    public ResponseEntity<Account> add(@RequestBody Account account, @RequestHeader String userInfo) {
 
         contextHolder.setUserInfo(userInfo);
         try {
