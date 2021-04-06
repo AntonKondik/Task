@@ -1,4 +1,6 @@
 package com.example.demo.service.impl;
+import com.example.demo.converter.AccountConverter;
+import com.example.demo.dto.AccountDto;
 import com.example.demo.model.Account;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.service.BalanceService;
@@ -21,13 +23,14 @@ public class BalanceServiceImpl implements BalanceService {
     private final ContextHolder contextHolder;
 
     @Override
-    public Account change(Long id, Double diff) throws NotFoundException {
+    public AccountDto change(Long id, Double diff) throws NotFoundException {
         log.info("Пользователь " + contextHolder.getUserInfo() + " изменяет баланс счета id = " + id + " на сумму = " + diff);
         Optional<Account> oAccount = accountRepository.findById(id);
         if (!oAccount.isPresent())
-            throw new NotFoundException("Аккаунт не найден");
+            throw new NotFoundException("Аккаунт с id " + id + " не найден");
         Account account = oAccount.get();
         account.setAmount(account.getAmount() + diff);//Здесь так и не понял в чем проблема - локально дернул метод - в базе значение поменялось
-        return accountRepository.save(account);
+        Account res = accountRepository.save(account);
+        return AccountConverter.convertToAccountDto(res);
     }
 }

@@ -1,5 +1,5 @@
 package com.example.demo.resource;
-import com.example.demo.model.Account;
+import com.example.demo.dto.AccountDto;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.BalanceService;
 import com.example.demo.util.ContextHolder;
@@ -24,51 +24,26 @@ public class AccountResource {
     private final ContextHolder contextHolder;
 
     @RequestMapping(method = POST, value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Account> add(@RequestBody Account account, @RequestHeader String userInfo) {
-
+    public ResponseEntity<AccountDto> add(@RequestBody AccountDto accountDto, @RequestHeader("userInfo") String userInfo) {
         contextHolder.setUserInfo(userInfo);
-        try {
-            Account res = accountService.save(account);
-            return new ResponseEntity<>(res, HttpStatus.OK);
-        } catch (Exception ex) {
-            log.error("Ошибка: " + ex);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        AccountDto res = accountService.save(accountDto);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @RequestMapping(method = GET, value = "/get/{accountNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Account> findByAccountNumber(@PathVariable("accountNumber") String accountNumber,
-                                                       @RequestHeader String userInfo) {
-
+    public ResponseEntity<AccountDto> findByAccountNumber(@PathVariable("accountNumber") String accountNumber,
+                                      @RequestHeader("userInfo") String userInfo) throws NotFoundException {
         contextHolder.setUserInfo(userInfo);
-        try {
-            Account res = accountService.findByAccountNumber(accountNumber);
-            if (res != null) {
-                return new ResponseEntity<>(res, HttpStatus.OK);
-            } else {
-                log.error("Аккаунт не найден");
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        AccountDto res = accountService.findByAccountNumber(accountNumber);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @RequestMapping(method = PUT, value = "/change", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Account> changeBalance(@RequestParam("id") Long id, @RequestParam("diff") Double diff,
-                                                 @RequestHeader String userInfo) {
-
+    public ResponseEntity<AccountDto> changeBalance(@RequestParam("id") Long id, @RequestParam("diff") Double diff,
+                                      @RequestHeader("userInfo") String userInfo) throws NotFoundException {
         log.info("Пользователь " + userInfo + " запросил изменение баланса счета id = " + id);
         contextHolder.setUserInfo(userInfo);
-        try {
-            Account res = balanceService.change(id, diff);
-            return new ResponseEntity<>(res, HttpStatus.OK);
-        } catch (NotFoundException ex) {
-            log.error("Ошибка: " + ex);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception ex) {
-            log.error("Ошибка: " + ex);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        AccountDto res = balanceService.change(id, diff);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

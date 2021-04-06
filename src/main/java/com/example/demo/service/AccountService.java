@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Account;
+import com.example.demo.dto.AccountDto;
+import javassist.NotFoundException;
 
 public interface AccountService {
 
-    Account save(Account account);
-    Account findByAccountNumber(String accountNumber);
+    AccountDto save(AccountDto accountDto);
+    AccountDto findByAccountNumber(String accountNumber) throws NotFoundException;
 }

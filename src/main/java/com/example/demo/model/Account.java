@@ -1,11 +1,13 @@
 package com.example.demo.model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
+@Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="ACCOUNT")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Account {
